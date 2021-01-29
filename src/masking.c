@@ -3,7 +3,7 @@
 
 void mask_8(uint16_t v, uint16_t dst[8])
 {
-    prng_fill((uint8_t *)dst, 7*2);
+    prng_fill((char *)dst, 7*2);
 
     uint16_t tmp = 0;
     for (int i = 0; i < 7; i++) {
@@ -14,7 +14,7 @@ void mask_8(uint16_t v, uint16_t dst[8])
 
 void mask32_8(uint32_t v, uint32_t dst[8])
 {
-    prng_fill((uint8_t *)dst, 7*4);
+    prng_fill((char *)dst, 7*4);
 
     uint32_t tmp = 0;
     for (int i = 0; i < 7; i++) {

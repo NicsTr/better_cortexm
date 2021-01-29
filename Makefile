@@ -36,7 +36,7 @@ C_OBJS_TEST += $(BUILD_TEST_PATH)/test_utils.o
 C_OBJS_TEST += $(BUILD_TEST_PATH)/test_masked_aes.o
 C_OBJS_TEST += $(BUILD_TEST_PATH)/main.o
 
-CFLAGS = -s -funroll-loops -mthumb -mcpu=cortex-m4 -O3 -I$(HEADERS_PATH)
+CFLAGS = -Wall -Werror -s -funroll-loops -mthumb -mcpu=cortex-m4 -O3 -I$(HEADERS_PATH)
 CFLAGS_TEST = -g -mthumb -mcpu=cortex-m4 -I$(HEADERS_TEST_PATH) -I$(HEADERS_PATH)
 
 LSCRIPT = $(TEST_PATH)/lscript.ld
