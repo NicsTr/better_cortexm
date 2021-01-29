@@ -16,12 +16,15 @@ int test_vectors_aes(int seed)
 
     uint16_t masked_bs_key[8][8];
     uint16_t masked_bs_state[8][8];
+    uint32_t fresh_randoms[3200];
 
+    prng_fill((uint8_t *)fresh_randoms, 4*3200);
     mask_bitslice_state(state, masked_bs_state);
     mask_bitslice_state(key, masked_bs_key);
 
-    masked_aes_keyschedule128(masked_bs_key, rkeys);
-    masked_aes_encrypt128(masked_bs_state, rkeys);
+    masked_aes_keyschedule128(masked_bs_key, rkeys, fresh_randoms);
+    prng_fill((uint8_t *)fresh_randoms, 4*3200);
+    masked_aes_encrypt128(masked_bs_state, rkeys, fresh_randoms);
 
     unbitslice_unmask_state(masked_bs_state, state);
     uint8_t state_ref[16] = { 0x69, 0xc4, 0xe0, 0xd8, 0x6a, 0x7b, 0x04, 0x30, 0xd8, 0xcd, 0xb7, 0x80, 0x70, 0xb4, 0xc5, 0x5a };

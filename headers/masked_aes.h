@@ -1,7 +1,7 @@
 #include <stdint.h>
 
-void masked_aes_keyschedule128(uint16_t key[8][8], uint16_t masked_bs_rkeys[11][8][8]);
-void masked_aes_encrypt128(uint16_t state[8][8], uint16_t rkeys[11][8][8]);
+void masked_aes_keyschedule128(uint16_t key[8][8], uint16_t masked_bs_rkeys[11][8][8], uint32_t fresh_randoms[320]);
+void masked_aes_encrypt128(uint16_t state[8][8], uint16_t rkeys[11][8][8], uint32_t fresh_randoms[3200]);
 
 //
 void prng_init(int seed);

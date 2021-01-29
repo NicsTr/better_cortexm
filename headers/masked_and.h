@@ -2,6 +2,6 @@
 #define MASKED_AND_H
 #include <stdint.h>
 
-void masked_and_8(uint16_t a0[8], uint16_t b0[8], uint16_t a1[8], uint16_t b1[8], uint16_t res0[8], uint16_t res1[8]);
+void masked_and_8(uint16_t a0[8], uint16_t b0[8], uint16_t a1[8], uint16_t b1[8], uint16_t res0[8], uint16_t res1[8], uint32_t fresh_randoms[20]);
 
 #endif /* MASKED_AND_H */

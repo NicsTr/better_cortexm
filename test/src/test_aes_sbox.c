@@ -42,7 +42,10 @@ int test_aes_sbox(int seed)
     uint16_t bs_sbox[8];
     uint16_t bs_masked_sbox[8][8];
     uint32_t v[4];
+    uint32_t fresh_randoms[320];
+
     prng_fill((uint8_t *)v, 16);
+    prng_fill((uint8_t *)fresh_randoms, 4*320);
     bitslice(v[0], v[1], v[2], v[3], bs_sbox);
 
 
@@ -50,7 +53,7 @@ int test_aes_sbox(int seed)
         mask_8(bs_sbox[i], bs_masked_sbox[i]);
     }
 
-    masked_aes_sbox_8(bs_masked_sbox);
+    masked_aes_sbox_8(bs_masked_sbox, fresh_randoms);
 
     uint32_t final_v[4];
     uint16_t final_bs[8];

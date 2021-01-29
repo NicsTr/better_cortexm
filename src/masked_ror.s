@@ -1,9 +1,6 @@
 .syntax unified
 .thumb
 
-// TODO test masked_ror8 and masked_ror4
-
-
 // Sharedsliced /!\
 // Require:
 // - r0 input sharing

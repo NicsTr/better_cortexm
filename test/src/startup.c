@@ -4,7 +4,7 @@ extern unsigned int _DATA_ROM_START;
 extern unsigned int _DATA_RAM_START;
 extern unsigned int _DATA_RAM_END;
 
-#define STACK_TOP 0x20002000
+#define STACK_TOP 0x20008000
 void startup();
 
 unsigned int * myvectors[2]

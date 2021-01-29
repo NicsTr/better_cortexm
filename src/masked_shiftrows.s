@@ -1,8 +1,6 @@
 .syntax unified
 .thumb
 
-// TODO test masked_shiftrows
-
 .macro swapmove r, m, n, t
     eor \t, \r, \r, LSL \n
     and \t, \m

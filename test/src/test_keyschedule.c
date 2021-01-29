@@ -30,8 +30,12 @@ int test_vectors_keyschedule(int seed)
     uint8_t key[16] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
     uint16_t masked_bs_rkeys[11][8][8];
     uint16_t masked_bs_key[8][8];
+    uint32_t fresh_randoms[3200];
+
+    prng_fill((uint8_t *)fresh_randoms, 4*3200);
+
     mask_bitslice_state(key, masked_bs_key);
-    masked_aes_keyschedule128(masked_bs_key, masked_bs_rkeys);
+    masked_aes_keyschedule128(masked_bs_key, masked_bs_rkeys, fresh_randoms);
 
 
 

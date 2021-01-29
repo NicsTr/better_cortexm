@@ -28,7 +28,6 @@
 // intertwined operands to prepare for masked and
 // Require:
 //  - r0, r1, r2, r3 containing the address of the operands (r0 & r1 and r2 & r3)
-//  - 
 
 // /!\ Every gp registers (r0 - r15) will be used /!\
 // /!\ except for r15 (PC) and r13 (SP) /!\
@@ -155,6 +154,78 @@
 .endm
 
 // Require:
+// - tmp, a temporary register
+// - addr of fresh randomness at sp + 44
+// Result:
+// - Stack:
+// sp -  28: fresh_rands[0]
+// ...
+// sp - 104: fresh_rands[19]
+.macro load_random tmp0, tmp1
+    ldr \tmp0, [sp, #44] // Load array address
+
+    ldr \tmp1, [\tmp0, #0] // Load data
+    str \tmp1, [sp, #-28] // Store it
+
+    ldr \tmp1, [\tmp0, #4]
+    str \tmp1, [sp, #-32]
+
+    ldr \tmp1, [\tmp0, #8]
+    str \tmp1, [sp, #-36]
+
+    ldr \tmp1, [\tmp0, #12]
+    str \tmp1, [sp, #-40]
+
+    ldr \tmp1, [\tmp0, #16]
+    str \tmp1, [sp, #-44]
+
+    ldr \tmp1, [\tmp0, #20]
+    str \tmp1, [sp, #-48]
+
+    ldr \tmp1, [\tmp0, #24]
+    str \tmp1, [sp, #-52]
+
+    ldr \tmp1, [\tmp0, #28]
+    str \tmp1, [sp, #-56]
+
+    ldr \tmp1, [\tmp0, #32]
+    str \tmp1, [sp, #-60]
+
+    ldr \tmp1, [\tmp0, #36]
+    str \tmp1, [sp, #-64]
+
+    ldr \tmp1, [\tmp0, #40]
+    str \tmp1, [sp, #-68]
+
+    ldr \tmp1, [\tmp0, #44]
+    str \tmp1, [sp, #-72]
+
+    ldr \tmp1, [\tmp0, #48]
+    str \tmp1, [sp, #-76]
+
+    ldr \tmp1, [\tmp0, #52]
+    str \tmp1, [sp, #-80]
+
+    ldr \tmp1, [\tmp0, #56]
+    str \tmp1, [sp, #-84]
+
+    ldr \tmp1, [\tmp0, #60]
+    str \tmp1, [sp, #-88]
+
+    ldr \tmp1, [\tmp0, #64]
+    str \tmp1, [sp, #-92]
+
+    ldr \tmp1, [\tmp0, #68]
+    str \tmp1, [sp, #-96]
+
+    ldr \tmp1, [\tmp0, #72]
+    str \tmp1, [sp, #-100]
+
+    ldr \tmp1, [\tmp0, #76]
+    str \tmp1, [sp, #-104]
+.endm
+
+// Require:
 //  - One tmp register
 // 
 // Result:
@@ -261,6 +332,7 @@
 // r14: b5
 
 // Stack:
+// sp +  44: fresh_randoms array addr
 // sp +  40: res1 array addr
 // sp +  36: res0 array addr
 // sp +  32: start of saved registers
@@ -296,7 +368,7 @@
 masked_and_8:
     prologue
 
-    zero_random r4
+    load_random r4, r5
     load_operands_masked_and_8
 
     and  r0,  r4,  r8    //Exec s00 = a0 & b0 into r0

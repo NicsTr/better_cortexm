@@ -75,7 +75,7 @@ test: $(BUILD_TEST_PATH)/main.bin
 
 # QEMU
 
-QEMU_FLAGS = -machine lm3s811evb -cpu cortex-m3 -nographic -kernel
+QEMU_FLAGS = -machine lm3s6965evb -cpu cortex-m3 -nographic -kernel
 QEMU_GDB_FLAGS = -gdb tcp::1234 -S
 
 qemu: test
