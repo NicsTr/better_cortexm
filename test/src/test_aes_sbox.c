@@ -44,8 +44,8 @@ int test_aes_sbox(int seed)
     uint32_t v[4];
     uint32_t fresh_randoms[320];
 
-    prng_fill((uint8_t *)v, 16);
-    prng_fill((uint8_t *)fresh_randoms, 4*320);
+    prng_fill((char *)v, 16);
+    prng_fill((char *)fresh_randoms, 4*320);
     bitslice(v[0], v[1], v[2], v[3], bs_sbox);
 
 
