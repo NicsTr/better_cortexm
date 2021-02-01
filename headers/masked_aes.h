@@ -10,5 +10,5 @@ void mask_bitslice_state(uint8_t state[16], uint16_t masked_bs_state[8][8]);
 void mask_8(uint16_t v, uint16_t dst[8]);
 void masked_mixcolumns_8(uint16_t state[8][8]);
 void masked_shiftrows_8(uint16_t state[8][8]);
-void masked_aes_sbox_8(uint16_t state[8][8]);
-void masked_and_8(uint16_t a0[8], uint16_t b0[8], uint16_t a1[8], uint16_t b1[8], uint16_t res0[8], uint16_t res1[8]);
+void masked_aes_sbox_8(uint16_t state[8][8], uint32_t fresh_randoms[320]);
+void masked_and_8(uint16_t a0[8], uint16_t b0[8], uint16_t a1[8], uint16_t b1[8], uint16_t res0[8], uint16_t res1[8], uint32_t fresh_randoms[20]);
