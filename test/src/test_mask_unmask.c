@@ -1,14 +1,13 @@
 #include <stdint.h>
 
-#include "xoshiro.h"
 #include "masking.h"
 
-int test_mask_unmask(int seed)
+int test_mask_unmask(void (*rng_fill)(char *, int))
 {
-    prng_init(seed);
     uint16_t masked[8];
-    uint16_t v = (uint16_t)(next() & 0xFFFF);
-    mask_8(v, masked);
+    uint16_t v;
+    rng_fill((char *)(&v), 2);
+    mask_8(v, masked, rng_fill);
 
     if (unmask_8(masked) != v) return 1;
 

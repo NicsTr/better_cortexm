@@ -4,7 +4,7 @@
 
 // TODO Align operands
 
-void masked_aes_sbox_8(uint16_t state[8][8], uint32_t fresh_randoms[320])
+void masked_aes_sbox_8(uint16_t state[8][8], void (*rng_fill)(char *, int))
 {
     uint16_t  tmp0[8];
     uint16_t  tmp1[8];
@@ -30,7 +30,7 @@ void masked_aes_sbox_8(uint16_t state[8][8], uint32_t fresh_randoms[320])
     uint16_t tmp21[8];
     uint16_t tmp22[8];
     uint16_t tmp23[8];
-
+    uint32_t fresh_randoms[20];
 
     masked_xor_8(state[3],  state[5],       tmp0); // y14 = U3 + U5
     masked_xor_8(state[0],  state[6],       tmp1); // y13 = U0 + U6
@@ -55,20 +55,25 @@ void masked_aes_sbox_8(uint16_t state[8][8], uint32_t fresh_randoms[320])
     masked_xor_8(state[2],  tmp10,      state[2]); // y16 = t0 + y11
     masked_xor_8(tmp1,      state[2],      tmp14); // y21 = y13 + y16
     masked_xor_8(state[0],  state[2],   state[0]); // y18 = U0 + y16
-    masked_and_8(tmp5,      state[5], tmp7, tmp8, tmp15, tmp16, &(fresh_randoms[0])); // t2 = y12 x y15; t3 = y3 x y6
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp5,      state[5], tmp7, tmp8, tmp15, tmp16, fresh_randoms); // t2 = y12 x y15; t3 = y3 x y6
     masked_xor_8(tmp16, tmp15, tmp17); // t4 = t3 + t2
-    masked_and_8(tmp1, state[2], state[3], state[7], tmp18, tmp19, &(fresh_randoms[20])); // t7 = y13 x y16; t5 = y4 x U7
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp1, state[2], state[3], state[7], tmp18, tmp19, fresh_randoms); // t7 = y13 x y16; t5 = y4 x U7
     masked_xor_8(tmp19, tmp15, tmp19); // t6 = t5 + t2
-    masked_and_8(tmp6, tmp11, state[6], tmp4, tmp20, tmp21, &(fresh_randoms[40])); // t10 = y2 x y7; t8 = y5 x y1
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp6, tmp11, state[6], tmp4, tmp20, tmp21, fresh_randoms); // t10 = y2 x y7; t8 = y5 x y1
     masked_xor_8(tmp21, tmp18, tmp21); // t9 = t8 + t7
     masked_xor_8(tmp20, tmp18, tmp18); // t11 = t10 + t7
-    masked_and_8(tmp2, tmp10, tmp0, tmp12, tmp20, tmp22, &(fresh_randoms[60])); // t12 = y9 x y11; t13 = y14 x y17
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp2, tmp10, tmp0, tmp12, tmp20, tmp22, fresh_randoms); // t12 = y9 x y11; t13 = y14 x y17
     masked_xor_8(tmp22, tmp20, tmp22); // t14 = t13 + t12
     masked_xor_8(tmp17, state[1], state[1]); // t17 = t4 + y20
     masked_xor_8(tmp21, tmp22, tmp21); // t19 = t9 + t14
     masked_xor_8(state[1], tmp22, tmp22); // t21 = t17 + t14
     masked_xor_8(tmp21, tmp14, tmp14); // t23 = t19 + y21
-    masked_and_8(tmp22, tmp14, tmp3, tmp9, tmp21, state[1], &(fresh_randoms[80])); // t26 = t21 x t23; t15 = y8 x y10
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp22, tmp14, tmp3, tmp9, tmp21, state[1], fresh_randoms); // t26 = t21 x t23; t15 = y8 x y10
     masked_xor_8(state[1], tmp20, tmp20); // t16 = t15 + t12
     masked_xor_8(tmp19,     tmp20, tmp19); // t18 = t6 + t16
     masked_xor_8(tmp18,     tmp20, tmp18); // t20 = t11 + t16
@@ -78,29 +83,40 @@ void masked_aes_sbox_8(uint16_t state[8][8], uint32_t fresh_randoms[320])
     masked_xor_8(tmp18,     tmp21, tmp20); // t27 = t24 + t26
     masked_xor_8(tmp14,     tmp18, tmp22); // t30 = t23 + t24
     masked_xor_8(tmp13,     tmp21, tmp21); // t31 = t22 + t26
-    masked_and_8(tmp21,     tmp22, tmp19, tmp20, tmp21, tmp22, &(fresh_randoms[100])); // t32 = t31 x t30; t28 = t25 x t27
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp21,     tmp22, tmp19, tmp20, tmp21, tmp22, fresh_randoms); // t32 = t31 x t30; t28 = t25 x t27
     masked_xor_8(tmp22,     tmp13, tmp13); // t29 = t28 + t22
     masked_xor_8(tmp21,     tmp18, tmp21); // t33 = t32 + t24
     masked_xor_8(tmp14,     tmp21, tmp14); // t34 = t23 + t33
     masked_xor_8(tmp20,     tmp21, tmp22); // t35 = t27 + t33
-    masked_and_8(tmp21,     state[7], tmp18, tmp22, state[7], tmp18, &(fresh_randoms[120])); // z2 = t33 x U7; t36 = t24 x t35
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp21,     state[7], tmp18, tmp22, state[7], tmp18, fresh_randoms); // z2 = t33 x U7; t36 = t24 x t35
     masked_xor_8(tmp18,     tmp14, tmp14); // t37 = t36 + t34
     masked_xor_8(tmp20,     tmp18, tmp18); // t38 = t27 + t36
     masked_xor_8(tmp21,     tmp14, tmp20); // t44 = t33 + t37
-    masked_and_8(tmp20,     state[5], tmp13, tmp18, tmp22, tmp18, &(fresh_randoms[140])); // z0 = t44 x y15; t39 = t29 x t38
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp20,     state[5], tmp13, tmp18, tmp22, tmp18, fresh_randoms); // z0 = t44 x y15; t39 = t29 x t38
     masked_xor_8(tmp19,     tmp18, tmp18); // t40 = t25 + t39
     masked_xor_8(tmp18,     tmp14, tmp19); // t41 = t40 + t37
     masked_xor_8(tmp13,     tmp21, state[1]); // t42 = t29 + t33
     masked_xor_8(tmp13,     tmp18, state[4]); // t43 = t29 + t40
     masked_xor_8(state[1], tmp19, state[5]); // t45 = t42 + t41
-    masked_and_8(tmp14, tmp8, state[4], state[2], tmp8, state[2], &(fresh_randoms[160])); // z1 = t37 x y6; z3 = t43 x y16
-    masked_and_8(tmp18, tmp4, tmp13, tmp11, tmp23, tmp11, &(fresh_randoms[180])); // z4 = t40 x y1; z5 = t29 x y7
-    masked_and_8(state[1], tmp10, state[5], tmp12, tmp10, tmp12, &(fresh_randoms[200])); // z6 = t42 x y11; z7 = t45 x y17
-    masked_and_8(tmp19, tmp9, tmp20, tmp5, tmp9, tmp5, &(fresh_randoms[220])); // z8 = t41 x y10; z9 = t44 x y12
-    masked_and_8(tmp14, tmp7, tmp21, state[3], tmp7, tmp14, &(fresh_randoms[240])); // z10 = t37 x y3; z11 = t33 x y4
-    masked_and_8(state[4], tmp1, tmp18, state[6], tmp1, tmp16, &(fresh_randoms[260])); // z12 = t43 x y13; z13 = t40 x y5
-    masked_and_8(tmp13, tmp6, state[1], tmp2, tmp6, tmp2, &(fresh_randoms[280])); // z14 = t29 x y2; z15 = t42 x y9
-    masked_and_8(state[5], tmp0, tmp19, tmp3, tmp0, tmp3, &(fresh_randoms[300])); // z16 = t45 x y14; z17 = t41 x y8
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp14, tmp8, state[4], state[2], tmp8, state[2], fresh_randoms); // z1 = t37 x y6; z3 = t43 x y16
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp18, tmp4, tmp13, tmp11, tmp23, tmp11, fresh_randoms); // z4 = t40 x y1; z5 = t29 x y7
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(state[1], tmp10, state[5], tmp12, tmp10, tmp12, fresh_randoms); // z6 = t42 x y11; z7 = t45 x y17
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp19, tmp9, tmp20, tmp5, tmp9, tmp5, fresh_randoms); // z8 = t41 x y10; z9 = t44 x y12
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp14, tmp7, tmp21, state[3], tmp7, tmp14, fresh_randoms); // z10 = t37 x y3; z11 = t33 x y4
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(state[4], tmp1, tmp18, state[6], tmp1, tmp16, fresh_randoms); // z12 = t43 x y13; z13 = t40 x y5
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(tmp13, tmp6, state[1], tmp2, tmp6, tmp2, fresh_randoms); // z14 = t29 x y2; z15 = t42 x y9
+    rng_fill((char *)fresh_randoms, 20*4);
+    masked_and_8(state[5], tmp0, tmp19, tmp3, tmp0, tmp3, fresh_randoms); // z16 = t45 x y14; z17 = t41 x y8
     masked_xor_8(tmp2, tmp0, tmp0); // tc1 = z15 + z16
     masked_xor_8(tmp7, tmp0, tmp4); // tc2 = z10 + tc1
     masked_xor_8(tmp5, tmp4, tmp5); // tc3 = z9 + tc2

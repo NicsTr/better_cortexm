@@ -1,9 +1,8 @@
 #include <stdint.h>
-#include "xoshiro.h"
 
-void mask_8(uint16_t v, uint16_t dst[8])
+void mask_8(uint16_t v, uint16_t dst[8], void (*rng_fill)(char *, int))
 {
-    prng_fill((char *)dst, 7*2);
+    rng_fill((char *)dst, 7*2);
 
     uint16_t tmp = 0;
     for (int i = 0; i < 7; i++) {
@@ -12,9 +11,9 @@ void mask_8(uint16_t v, uint16_t dst[8])
     dst[7] = tmp ^ v;
 }
 
-void mask32_8(uint32_t v, uint32_t dst[8])
+void mask32_8(uint32_t v, uint32_t dst[8], void (*rng_fill)(char *, int))
 {
-    prng_fill((char *)dst, 7*4);
+    rng_fill((char *)dst, 7*4);
 
     uint32_t tmp = 0;
     for (int i = 0; i < 7; i++) {

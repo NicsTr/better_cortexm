@@ -1,6 +1,5 @@
 #include <stdint.h>
 
-#include "xoshiro.h"
 #include "masking.h"
 #include "masked_aes_keyschedule.h"
 #include "bitslicing.h"
@@ -21,21 +20,17 @@ static uint32_t true_rkeys[11][4] = {
     { 0xa8f914d0, 0x8925eec9, 0xc80c3fe1, 0xa60c63b6 }
 };
 
-int test_vectors_keyschedule(int seed)
+int test_vectors_keyschedule(void (*rng_fill)(char *, int))
 {
     int nb_err = 0;
-    prng_init(seed);
 
     //uint8_t key[16] = {0x16, 0x15, 0x7e, 0x2b, 0xa6, 0xd2, 0xae, 0x28, 0x88, 0x15, 0xf7, 0xab, 0x3c, 0x4f, 0xcf, 0x09};
     uint8_t key[16] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
     uint16_t masked_bs_rkeys[11][8][8];
     uint16_t masked_bs_key[8][8];
-    uint32_t fresh_randoms[3200];
 
-    prng_fill((char *)fresh_randoms, 4*3200);
-
-    mask_bitslice_state(key, masked_bs_key);
-    masked_aes_keyschedule128(masked_bs_key, masked_bs_rkeys, fresh_randoms);
+    mask_bitslice_state(key, masked_bs_key, rng_fill);
+    masked_aes_keyschedule128(masked_bs_key, masked_bs_rkeys, rng_fill);
 
 
 

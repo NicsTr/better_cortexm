@@ -1,6 +1,5 @@
 #include <stdint.h>
 
-#include "xoshiro.h"
 #include "masked_mixcolumns.h"
 #include "masking.h"
 #include "bitslicing.h"
@@ -98,20 +97,18 @@ void mixcolumns(uint16_t state[8])
     state[7] = state[7] ^ tmp1;
 }
 
-int test_mixcolumns(int seed)
+int test_mixcolumns(void (*rng_fill)(char *, int))
 {
-    prng_init(seed);
-
     uint16_t bs_state[8];
     uint32_t state[4];
     uint16_t bs_masked_state[8][8];
     int nb_err = 0;
 
-    prng_fill((char *) state, 8*2);
+    rng_fill((char *) state, 8*2);
     bitslice(state[0], state[1], state[2], state[3], bs_state);
 
     for (int i = 0; i < 8; i++) {
-        mask_8(bs_state[i], bs_masked_state[i]);
+        mask_8(bs_state[i], bs_masked_state[i], rng_fill);
     }
 
     masked_mixcolumns_8(bs_masked_state);
@@ -126,10 +123,8 @@ int test_mixcolumns(int seed)
     return nb_err;
 }
 
-int test_vectors_mixcolumns(int seed)
+int test_vectors_mixcolumns(void (*rng_fill)(char *, int))
 {
-    prng_init(seed);
-
     uint16_t bs_state[8];
     uint32_t state[4];
     uint16_t bs_masked_state[8][8];
@@ -143,7 +138,7 @@ int test_vectors_mixcolumns(int seed)
     bitslice(state[0], state[1], state[2], state[3], bs_state);
 
     for (int i = 0; i < 8; i++) {
-        mask_8(bs_state[i], bs_masked_state[i]);
+        mask_8(bs_state[i], bs_masked_state[i], rng_fill);
     }
 
     masked_mixcolumns_8(bs_masked_state);

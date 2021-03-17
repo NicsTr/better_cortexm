@@ -1,19 +1,17 @@
 #include <stdint.h>
 
-#include "xoshiro.h"
 #include "masked_ror.h"
 
 #define ROTR16(x,shift) ((uint16_t) ((x) >> (shift)) | (uint16_t) ((x) << (16 - (shift))))
 
-int test_ror(int seed)
+int test_ror(void (*rng_fill)(char *, int))
 {
-    prng_init(seed);
     uint16_t masked_v[8];
     uint16_t   ror4_v[8];
     uint16_t   ror8_v[8];
     int nb_err = 0;
 
-    prng_fill((char *)masked_v, 2*8);
+    rng_fill((char *)masked_v, 2*8);
 
     masked_ror4_8(masked_v, ror4_v);
     masked_ror8_8(masked_v, ror8_v);

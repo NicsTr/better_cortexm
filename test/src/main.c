@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "xoshiro.h"
 #include "test_and.h"
 #include "test_aes_sbox.h"
 #include "test_mask_unmask.h"
@@ -20,11 +21,14 @@ void my_exit(int status, int id)
     __asm__("swi 1"); // Makes qemu crash and print register values
 }
 
-void launch_test(int (*test_fnc)(int), int *seed, int id)
+void launch_test(int (*test_fnc)(void (*)(char *, int)), int *seed, int id)
 {
     int nb_err = 0;
 
-    for (int i = 0; i < 1000; i++,(*seed)++) nb_err += test_fnc(*seed);
+    for (int i = 0; i < 1000; i++,(*seed)++) {
+        prng_init(*seed);
+        nb_err += test_fnc(prng_fill);
+    }
 
     if (nb_err != 0) my_exit(nb_err, id);
 }

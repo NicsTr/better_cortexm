@@ -1,6 +1,5 @@
 #include <stdint.h>
 
-#include "xoshiro.h"
 #include "masked_shiftrows.h"
 #include "masking.h"
 
@@ -19,18 +18,16 @@ void shiftrows(uint16_t state[8])
     }
 }
 
-int test_shiftrows(int seed)
+int test_shiftrows(void (*rng_fill)(char *, int))
 {
-    prng_init(seed);
-
     uint16_t bs_state[8];
     uint16_t bs_masked_state[8][8];
     int nb_err = 0;
 
-    prng_fill((char *) bs_state, 8*2);
+    rng_fill((char *) bs_state, 8*2);
 
     for (int i = 0; i < 8; i++) {
-        mask_8(bs_state[i], bs_masked_state[i]);
+        mask_8(bs_state[i], bs_masked_state[i], rng_fill);
     }
 
     masked_shiftrows_8(bs_masked_state);

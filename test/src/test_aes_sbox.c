@@ -1,6 +1,5 @@
 #include <stdint.h>
 
-#include "xoshiro.h"
 #include "bitslicing.h"
 #include "masking.h"
 #include "masked_aes_sbox.h"
@@ -32,9 +31,8 @@ void initialize_aes_sbox(uint8_t sbox[256])
 	sbox[0] = 0x63;
 }
 
-int test_aes_sbox(int seed)
+int test_aes_sbox(void (*rng_fill)(char *, int))
 {
-    prng_init(seed);
     uint8_t array_sbox[256];
     int nb_err = 0;
     initialize_aes_sbox(array_sbox);
@@ -44,16 +42,15 @@ int test_aes_sbox(int seed)
     uint32_t v[4];
     uint32_t fresh_randoms[320];
 
-    prng_fill((char *)v, 16);
-    prng_fill((char *)fresh_randoms, 4*320);
+    rng_fill((char *)v, 16);
     bitslice(v[0], v[1], v[2], v[3], bs_sbox);
 
 
     for (int i = 0; i < 8; i++) {
-        mask_8(bs_sbox[i], bs_masked_sbox[i]);
+        mask_8(bs_sbox[i], bs_masked_sbox[i], rng_fill);
     }
 
-    masked_aes_sbox_8(bs_masked_sbox, fresh_randoms);
+    masked_aes_sbox_8(bs_masked_sbox, rng_fill);
 
     uint32_t final_v[4];
     uint16_t final_bs[8];

@@ -66,7 +66,7 @@ $(BUILD_TEST_PATH)/%.o: $(SRC_TEST_PATH)/%.c
 	arm-none-eabi-gcc $(CFLAGS_TEST) -c $< -o $@
 
 $(BUILD_TEST_PATH)/main.elf: $(C_OBJS_TEST) $(LSCRIPT) $(LIB_PATH)/libmasked_aes.a
-	arm-none-eabi-gcc $(C_OBJS_TEST) -o $@ $(LFLAGS_TEST) 
+	arm-none-eabi-gcc $(ARCH_FLAGS) $(C_OBJS_TEST) -o $@ $(LFLAGS_TEST)
 
 $(BUILD_TEST_PATH)/main.bin: $(BUILD_TEST_PATH)/main.elf
 	arm-none-eabi-objcopy -O binary $< $@

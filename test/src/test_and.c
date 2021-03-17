@@ -1,10 +1,8 @@
 #include <stdint.h>
-#include "xoshiro.h"
 #include "masked_and.h"
 
-int test_and(int seed)
+int test_and(void (*rng_fill)(char *, int))
 {
-    prng_init(seed);
     uint16_t a0[8];
     uint16_t b0[8];
     uint16_t a1[8];
@@ -13,11 +11,11 @@ int test_and(int seed)
     uint16_t res1[8];
     uint32_t fresh_randoms[20];
 
-    prng_fill((char *)a0, 2*8);
-    prng_fill((char *)b0, 2*8);
-    prng_fill((char *)a1, 2*8);
-    prng_fill((char *)b1, 2*8);
-    prng_fill((char *)fresh_randoms, 4*20);
+    rng_fill((char *)a0, 2*8);
+    rng_fill((char *)b0, 2*8);
+    rng_fill((char *)a1, 2*8);
+    rng_fill((char *)b1, 2*8);
+    rng_fill((char *)fresh_randoms, 4*20);
 
     masked_and_8(a0, b0, a1, b1, res0, res1, fresh_randoms);
 

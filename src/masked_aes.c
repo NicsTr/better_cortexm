@@ -17,65 +17,65 @@ void static inline add_round_key_8(uint16_t state[8][8], uint16_t rkey[8][8])
     masked_xor_8(state[7], rkey[7], state[7]);
 }
 
-void masked_aes_encrypt128(uint16_t state[8][8], uint16_t rkeys[11][8][8], uint32_t fresh_randoms[3200])
+void masked_aes_encrypt128(uint16_t state[8][8], uint16_t rkeys[11][8][8], void (*rng_fill)(char *, int))
 {
     /* Round 1 */
     add_round_key_8(state, rkeys[0]);
-    masked_aes_sbox_8(state, &(fresh_randoms[0]));
+    masked_aes_sbox_8(state, rng_fill);
     masked_shiftrows_8(state);
     masked_mixcolumns_8(state);
 
     /* Round 2 */
     add_round_key_8(state, rkeys[1]);
-    masked_aes_sbox_8(state, &(fresh_randoms[320]));
+    masked_aes_sbox_8(state, rng_fill);
     masked_shiftrows_8(state);
     masked_mixcolumns_8(state);
 
     /* Round 3 */
     add_round_key_8(state, rkeys[2]);
-    masked_aes_sbox_8(state, &(fresh_randoms[640]));
+    masked_aes_sbox_8(state, rng_fill);
     masked_shiftrows_8(state);
     masked_mixcolumns_8(state);
 
     /* Round 4 */
     add_round_key_8(state, rkeys[3]);
-    masked_aes_sbox_8(state, &(fresh_randoms[960]));
+    masked_aes_sbox_8(state, rng_fill);
     masked_shiftrows_8(state);
     masked_mixcolumns_8(state);
 
     /* Round 5 */
     add_round_key_8(state, rkeys[4]);
-    masked_aes_sbox_8(state, &(fresh_randoms[1280]));
+    masked_aes_sbox_8(state, rng_fill);
     masked_shiftrows_8(state);
     masked_mixcolumns_8(state);
 
     /* Round 6 */
     add_round_key_8(state, rkeys[5]);
-    masked_aes_sbox_8(state, &(fresh_randoms[1600]));
+    masked_aes_sbox_8(state, rng_fill);
     masked_shiftrows_8(state);
     masked_mixcolumns_8(state);
 
     /* Round 7 */
     add_round_key_8(state, rkeys[6]);
-    masked_aes_sbox_8(state, &(fresh_randoms[1920]));
+    masked_aes_sbox_8(state, rng_fill);
     masked_shiftrows_8(state);
     masked_mixcolumns_8(state);
 
     /* Round 8 */
     add_round_key_8(state, rkeys[7]);
-    masked_aes_sbox_8(state, &(fresh_randoms[2240]));
+    masked_aes_sbox_8(state, rng_fill);
     masked_shiftrows_8(state);
     masked_mixcolumns_8(state);
 
     /* Round 9 */
     add_round_key_8(state, rkeys[8]);
-    masked_aes_sbox_8(state, &(fresh_randoms[2560]));
+    masked_aes_sbox_8(state, rng_fill);
     masked_shiftrows_8(state);
     masked_mixcolumns_8(state);
 
     /* Last round */
     add_round_key_8(state, rkeys[9]);
-    masked_aes_sbox_8(state, &(fresh_randoms[2880]));
+    masked_aes_sbox_8(state, rng_fill);
     masked_shiftrows_8(state);
     add_round_key_8(state, rkeys[10]);
 }
