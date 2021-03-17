@@ -16,8 +16,8 @@ ASSEMBLY_OBJS += $(BUILD_PATH)/bitslicing_s.o
 ASSEMBLY_OBJS += $(BUILD_PATH)/masked_mixcolumns_s.o
 ASSEMBLY_OBJS += $(BUILD_PATH)/masked_rotword_xorcol_s.o
 
-#C_OBJS  = $(BUILD_PATH)/xoshiro_c.o
-C_OBJS  = $(BUILD_PATH)/masked_aes_sbox_c.o
+C_OBJS  = $(BUILD_PATH)/xoshiro_c.o
+C_OBJS += $(BUILD_PATH)/masked_aes_sbox_c.o
 C_OBJS += $(BUILD_PATH)/masked_aes_keyschedule_c.o
 C_OBJS += $(BUILD_PATH)/masking_c.o
 C_OBJS += $(BUILD_PATH)/masked_utils_c.o
@@ -36,8 +36,9 @@ C_OBJS_TEST += $(BUILD_TEST_PATH)/test_utils.o
 C_OBJS_TEST += $(BUILD_TEST_PATH)/test_masked_aes.o
 C_OBJS_TEST += $(BUILD_TEST_PATH)/main.o
 
-CFLAGS = -Wall -Werror -s -funroll-loops -mthumb -mcpu=cortex-m4 -O3 -I$(HEADERS_PATH)
-CFLAGS_TEST = -g -mthumb -mcpu=cortex-m4 -I$(HEADERS_TEST_PATH) -I$(HEADERS_PATH)
+ARCH_FLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CFLAGS = -Wall -Werror -s -funroll-loops $(ARCH_FLAGS) -O3 -I$(HEADERS_PATH)
+CFLAGS_TEST = -g $(ARCH_FLAGS) -I$(HEADERS_TEST_PATH) -I$(HEADERS_PATH) -lnosys
 
 LSCRIPT = $(TEST_PATH)/lscript.ld
 LFLAGS_TEST = -static -nostartfiles -T$(LSCRIPT) -L$(LIB_PATH) -lmasked_aes
@@ -46,13 +47,13 @@ LFLAGS_TEST = -static -nostartfiles -T$(LSCRIPT) -L$(LIB_PATH) -lmasked_aes
 # LIBRARY
 
 $(BUILD_PATH)/%_s.o: $(SRC_PATH)/%.s $(HEADERS_PATH)/%.h
-	arm-none-eabi-as -mthumb -mcpu=cortex-m4 $< -o $@ 
+	arm-none-eabi-as $(ARCH_FLAGS) $< -o $@ 
 
 $(BUILD_PATH)/%_c.o: $(SRC_PATH)/%.c $(HEADERS_PATH)/%.h
 	arm-none-eabi-gcc $(CFLAGS) -c $< -o $@
 
 $(LIB_PATH)/libmasked_aes.a: $(ASSEMBLY_OBJS) $(C_OBJS)
-	arm-none-eabi-ar rcs $@ $(ASSEMBLY_OBJS) $(C_OBJS) $(BUILD_PATH)/xoshiro_c.o
+	arm-none-eabi-ar rcs $@ $(ASSEMBLY_OBJS) $(C_OBJS)
 
 
 lib: ./lib/libmasked_aes.a
@@ -102,7 +103,7 @@ cw: lib $(HEADERS_PATH)/masked_aes.h
 
 clean:
 	rm -f $(BUILD_PATH)/*.o $(LIB_PATH)/*.a $(BUILD_TEST_PATH)/*.o $(BUILD_TEST_PATH)/main.elf $(BUILD_TEST_PATH)/main.bin
-	cp ./xoshiro_c.o $(BUILD_PATH)/ # DIRTY H4XX
+#	cp ./xoshiro_c.o $(BUILD_PATH)/ # DIRTY H4XX
 
 all: lib test qemu
 
