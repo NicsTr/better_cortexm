@@ -9,7 +9,7 @@
 .endm
 
 // r1 contain addres of the bitsliced and masked state
-// The correct rotation is applied to all shares of a single bitslice register 
+// The correct rotation is applied to all shares of a single bitslice register
 .macro rotbit off, mask
     .set addr, 0   + \off
     ldrh r2, [r1, #addr]
@@ -77,33 +77,66 @@
     orr  \dst,  \dst, \tmp0            // Store the result in column 3
 .endm
 
+// r0: address of previous rkey
+// r1: address of current rkey
+// For each share of a single bitslice register (specified by off), apply
+// the xoring process of the columns to compute the current rkey
 .macro xorcols_bit off, mask
+    // First half of the shares
     .set addr, 0   + \off
-    ldr r2, [r1, #addr]
-    ldr r6, [r0, #addr]
+    ldrh r2, [r1, #addr]
+    ldrh r6, [r0, #addr]
+    .set addr, 2   + \off
+    ldrh r3, [r1, #addr]
+    ldrh r7, [r0, #addr]
     .set addr, 4   + \off
-    ldr r3, [r1, #addr]
-    ldr r7, [r0, #addr]
-    .set addr, 8   + \off
-    ldr r4, [r1, #addr]
-    ldr r8, [r0, #addr]
-    .set addr, 12  + \off
-    ldr r5, [r1, #addr]
-    ldr r9, [r0, #addr ]
+    ldrh r4, [r1, #addr]
+    ldrh r8, [r0, #addr]
+    .set addr, 6  + \off
+    ldrh r5, [r1, #addr]
+    ldrh r9, [r0, #addr ]
 
-    xorcols_share r2, r6, r10, r14, \mask 
-    xorcols_share r3, r7, r10, r14, \mask 
-    xorcols_share r4, r8, r10, r14, \mask 
-    xorcols_share r5, r9, r10, r14, \mask 
+    xorcols_share r2, r6, r10, r14, \mask
+    xorcols_share r3, r7, r10, r14, \mask
+    xorcols_share r4, r8, r10, r14, \mask
+    xorcols_share r5, r9, r10, r14, \mask
 
     .set addr, 0   + \off
-    str r2, [r1, #addr]
+    strh r2, [r1, #addr]
+    .set addr, 2   + \off
+    strh r3, [r1, #addr]
     .set addr, 4   + \off
-    str r3, [r1, #addr]
+    strh r4, [r1, #addr]
+    .set addr, 6  + \off
+    strh r5, [r1, #addr]
+
+    // Second half of the shares
     .set addr, 8   + \off
-    str r4, [r1, #addr]
-    .set addr, 12  + \off
-    str r5, [r1, #addr]
+    ldrh r2, [r1, #addr]
+    ldrh r6, [r0, #addr]
+    .set addr, 10   + \off
+    ldrh r3, [r1, #addr]
+    ldrh r7, [r0, #addr]
+    .set addr, 12   + \off
+    ldrh r4, [r1, #addr]
+    ldrh r8, [r0, #addr]
+    .set addr, 14  + \off
+    ldrh r5, [r1, #addr]
+    ldrh r9, [r0, #addr ]
+
+    xorcols_share r2, r6, r10, r14, \mask
+    xorcols_share r3, r7, r10, r14, \mask
+    xorcols_share r4, r8, r10, r14, \mask
+    xorcols_share r5, r9, r10, r14, \mask
+
+    .set addr, 8   + \off
+    strh r2, [r1, #addr]
+    .set addr, 10   + \off
+    strh r3, [r1, #addr]
+    .set addr, 12   + \off
+    strh r4, [r1, #addr]
+    .set addr, 14  + \off
+    strh r5, [r1, #addr]
 .endm
 
 // Require:
@@ -112,7 +145,7 @@
 .globl masked_rotword_xorcol
 .type masked_rotword_xorcol,%function
 masked_rotword_xorcol:
-    push {r4-r10, lr} 
+    push {r4-r10, lr}
 
     // Here, we need to rotword and put in column 0 what is in column 3 of
     // the state given by r1
@@ -128,7 +161,7 @@ masked_rotword_xorcol:
     rotbit 80,  r12
     rotbit 96,  r12
     rotbit 112, r12
-    
+
     // Now r1 is a state with only column 0 set.
     // Can start xor
 
@@ -144,5 +177,5 @@ masked_rotword_xorcol:
     xorcols_bit 96,  r12
     xorcols_bit 112, r12
 
-    pop {r4-r10, pc} 
+    pop {r4-r10, pc}
 .size masked_rotword_xorcol,.-masked_rotword_xorcol
