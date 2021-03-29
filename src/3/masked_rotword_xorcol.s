@@ -108,13 +108,13 @@ masked_rotword_xorcol:
     movt r12, #0x8000
 
     rotbit 0,   r12
+    rotbit 8,  r12
     rotbit 16,  r12
+    rotbit 24,  r12
     rotbit 32,  r12
+    rotbit 40,  r12
     rotbit 48,  r12
-    rotbit 64,  r12
-    rotbit 80,  r12
-    rotbit 96,  r12
-    rotbit 112, r12
+    rotbit 56, r12
     
     // Now r1 is a state with only column 0 set.
     // Can start xor
@@ -123,13 +123,13 @@ masked_rotword_xorcol:
     movt r12, #0x8888
 
     xorcols_bit 0,   r12
+    xorcols_bit 8,  r12
     xorcols_bit 16,  r12
+    xorcols_bit 24,  r12
     xorcols_bit 32,  r12
+    xorcols_bit 40,  r12
     xorcols_bit 48,  r12
-    xorcols_bit 64,  r12
-    xorcols_bit 80,  r12
-    xorcols_bit 96,  r12
-    xorcols_bit 112, r12
+    xorcols_bit 56, r12
 
     pop {r4-r10, pc} 
 .size masked_rotword_xorcol,.-masked_rotword_xorcol

@@ -75,8 +75,8 @@
 // - Stack:
 // sp + 4: fresh_rands[1]
 // sp    : fresh_rands[0]
-// Load rand00, rand01 and rand10 directly in registers r0, r1, r2
-.macro load_random tmp0, tmp1
+// Load rand00, rand01 and rand10 directly in registers out0, out1, out2
+.macro load_random tmp0, tmp1, out0, out1, out2
     ldr \tmp0, [sp, #52] // Load array address
 
     ldr \tmp1, [\tmp0, #0] // Load data
@@ -85,9 +85,9 @@
     ldr \tmp1, [\tmp0, #4]
     str \tmp1, [sp, #4] // Store it
 
-    ldr r0, [\tmp0, #8]
-    ldr r1, [\tmp0, #12]
-    ldr r2, [\tmp0, #16]
+    ldr \out0, [\tmp0, #8]
+    ldr \out1, [\tmp0, #12]
+    ldr \out2, [\tmp0, #16]
 .endm
 
 // Require:
@@ -157,7 +157,7 @@
 
 // Require this layout at the start:
 
-// Registers:
+// Registers will be:
 // r0:  X
 // r1:  X
 // r2:  X
@@ -190,10 +190,10 @@
 masked_and:
     prologue
 
-    sub sp, #40
+    sub sp, #8
 
-    load_random r4, r5
     load_operands_masked_and
+    load_random r12, r14, r0, r1, r2
 
     and  r3,  r4,  r8    //Exec s00 = a0 & b0 into r3
     eor r12,  r3,  r0    //Exec y01 = s00 ^ rand00 into r12
@@ -244,6 +244,6 @@ masked_and:
     eor  r0,  r0,  r2    //Exec T3  = y34 ^ rand10 into r0
     
     store_results_masked
-    add sp, #40
+    add sp, #8
     epilogue
 .size masked_and,.-masked_and

@@ -67,7 +67,7 @@
 // sp + 128: b7
 
 // 4 blocks of load/store and start with load (should be pipelined with last random store)
-.macro load_operands_masked_and_8
+.macro load_operands_masked_and
 
     ldrh r8,  [r2, #8]   // half of a4
     ldrh r9,  [r2, #10]  // half of a5
@@ -289,7 +289,7 @@
 
 // Result:
 //  - res0 and res1 array correctly filled with result of masked_and
-.macro store_results_masked_8
+.macro store_results_masked
     ldr r1, [sp, #44] // Load T0 in r1
     ldr r2, [sp, #20] // Load T1 in r2
     ldr r5, [sp, #4] // Load T2 in r5
@@ -357,9 +357,9 @@
 
 // prologue: 1 block, 11 stores
 // zero_random: 1 block, 20 stores
-// load_operands_masked_and_8: 4 blocks, 38 loads
+// load_operands_masked_and: 4 blocks, 38 loads
 // Body: 57 loads, 30 stores
-// store_results_masked_8: 1 block of 6 loads, 16 stores
+// store_results_masked: 1 block of 6 loads, 16 stores
 // epilogue: 1 block, 11 loads
 
 // Total macro: 77 stores, 112 loads (but a lot are pipelined and take only
@@ -367,15 +367,15 @@
 
 // TODO: HARDWARE LEAK during execution of a single instruction
 
-.globl masked_and_8
-.type masked_and_8,%function
-masked_and_8:
+.globl masked_and
+.type masked_and,%function
+masked_and:
     prologue
 
     sub sp, #152
 
     load_random r4, r5
-    load_operands_masked_and_8
+    load_operands_masked_and
 
     and  r0,  r4,  r8    //Exec s00 = a0 & b0 into r0
     ldr  r1, [sp, #124 ] //Load rand00 into r1
@@ -628,7 +628,7 @@ masked_and_8:
     eor  r0,  r0, r10    //Exec y7b = y7a ^ s73 into r0
     eor  r0,  r0, r11    //Exec T7  = y7b ^ rand23 into r0
 
-    store_results_masked_8
+    store_results_masked
     add sp, #152
     epilogue
-.size masked_and_8,.-masked_and_8
+.size masked_and,.-masked_and

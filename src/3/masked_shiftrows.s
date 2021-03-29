@@ -18,22 +18,22 @@
 // Apply shiftrow on two bitslice registers at a time
 .macro masked_shiftrow off
     .set addr0, \off
-    .set addr1, \off + 16
+    .set addr1, \off + 8
     ldrh r1, [r0, #addr0]
     ldrh r9, [r0, #addr1]
     orr  r1, r1, r9, LSL #16
     .set addr0, \off + 2
-    .set addr1, \off + 2 + 16
+    .set addr1, \off + 2 + 8
     ldrh r2, [r0, #addr0]
     ldrh r9, [r0, #addr1]
     orr  r2, r2, r9, LSL #16
     .set addr0, \off + 4
-    .set addr1, \off + 4 + 16
+    .set addr1, \off + 4 + 8
     ldrh r3, [r0, #addr0]
     ldrh r9, [r0, #addr1]
     orr  r3, r3, r9, LSL #16
     .set addr0, \off + 6
-    .set addr1, \off + 6 + 16
+    .set addr1, \off + 6 + 8
     ldrh r4, [r0, #addr0]
     ldrh r9, [r0, #addr1]
     orr  r4, r4, r9, LSL #16
@@ -50,22 +50,22 @@
 
 
     .set addr0, \off
-    .set addr1, \off + 16
+    .set addr1, \off + 8
     strh r1, [r0, #addr0]
     lsr  r1, r1, #16
     strh r1, [r0, #addr1]
     .set addr0, \off + 2
-    .set addr1, \off + 2 + 16
+    .set addr1, \off + 2 + 8
     strh r2, [r0, #addr0]
     lsr  r2, r2, #16
     strh r2, [r0, #addr1]
     .set addr0, \off + 4
-    .set addr1, \off + 4 + 16
+    .set addr1, \off + 4 + 8
     strh r3, [r0, #addr0]
     lsr  r3, r3, #16
     strh r3, [r0, #addr1]
     .set addr0, \off + 6
-    .set addr1, \off + 6 + 16
+    .set addr1, \off + 6 + 8
     strh r4, [r0, #addr0]
     lsr  r4, r4, #16
     strh r4, [r0, #addr1]
@@ -78,7 +78,7 @@
 masked_shiftrows:
     // Don't need to save r1, r2, r3 or r12, they are scratch registers
     // lr = r14
-    push {r4, lr}
+    push {r4, r9, lr}
 
     movw r12, #0x4C80
     movt r12, #0x4C80
@@ -86,11 +86,11 @@ masked_shiftrows:
     movt r14, #0xA0A0
 
     masked_shiftrow 0
+    masked_shiftrow 16
     masked_shiftrow 32
-    masked_shiftrow 64
-    masked_shiftrow 96
+    masked_shiftrow 48
     
-    pop {r4, pc}
+    pop {r4, r9, pc}
 .size masked_shiftrows,.-masked_shiftrows
 
 

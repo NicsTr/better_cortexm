@@ -16,7 +16,7 @@
 //  - r9 tmp register for swapmove
 //
 // Apply shiftrow on two bitslice registers at a time
-.macro masked_shiftrow_8 off
+.macro masked_shiftrow off
     .set addr0, \off
     .set addr1, \off + 16
     ldrh r1, [r0, #addr0]
@@ -120,9 +120,9 @@
 
 // Require:
 // - r0 = state pointer
-.globl masked_shiftrows_8
-.type masked_shiftrows_8,%function
-masked_shiftrows_8:
+.globl masked_shiftrows
+.type masked_shiftrows,%function
+masked_shiftrows:
     // Don't need to save r1, r2, r3 or r12, they are scratch registers
     // lr = r14
     push {r4-r9, lr}
@@ -132,13 +132,13 @@ masked_shiftrows_8:
     movw r14, #0xA0A0
     movt r14, #0xA0A0
 
-    masked_shiftrow_8 0
-    masked_shiftrow_8 32
-    masked_shiftrow_8 64
-    masked_shiftrow_8 96
+    masked_shiftrow 0
+    masked_shiftrow 32
+    masked_shiftrow 64
+    masked_shiftrow 96
     
     pop {r4-r9, pc}
-.size masked_shiftrows_8,.-masked_shiftrows_8
+.size masked_shiftrows,.-masked_shiftrows
 
 
 
@@ -148,7 +148,7 @@ masked_shiftrows_8:
 
 
 // Sharesliced /!\
-.macro masked_shiftrow_8_shareslice row, tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6
+.macro masked_shiftrow_shareslice row, tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6
     ldr \tmp0, [\row, #0 ]
     ldr \tmp1, [\row, #4 ]
     ldr \tmp2, [\row, #8 ]
@@ -172,9 +172,9 @@ masked_shiftrows_8:
 
 // Require:
 // - r0 = state pointer
-.globl masked_shiftrows_8_shareslice
-.type masked_shiftrows_8_shareslice,%function
-masked_shiftrows_8_shareslice:
+.globl masked_shiftrows_shareslice
+.type masked_shiftrows_shareslice,%function
+masked_shiftrows_shareslice:
     // Don't need to save r1, r2, r3 or r12, they are scratch registers
     // lr = r14
     push {r4, r5, r6, lr}
@@ -185,20 +185,20 @@ masked_shiftrows_8_shareslice:
     movt r2, #0xA0A0
     // r0 is already at the right value
     add r1, r0, #16
-    masked_shiftrow_8_shareslice r0, r3, r12, r4, r5, r6, r2, r14 
-    masked_shiftrow_8_shareslice r1, r3, r12, r4, r5, r6, r2, r14 
+    masked_shiftrow_shareslice r0, r3, r12, r4, r5, r6, r2, r14 
+    masked_shiftrow_shareslice r1, r3, r12, r4, r5, r6, r2, r14 
     add r0, r0, #32
     add r1, r1, #32
-    masked_shiftrow_8_shareslice r0, r3, r12, r4, r5, r6, r2, r14 
-    masked_shiftrow_8_shareslice r1, r3, r12, r4, r5, r6, r2, r14 
+    masked_shiftrow_shareslice r0, r3, r12, r4, r5, r6, r2, r14 
+    masked_shiftrow_shareslice r1, r3, r12, r4, r5, r6, r2, r14 
     add r0, r0, #32
     add r1, r1, #32
-    masked_shiftrow_8_shareslice r0, r3, r12, r4, r5, r6, r2, r14 
-    masked_shiftrow_8_shareslice r1, r3, r12, r4, r5, r6, r2, r14 
+    masked_shiftrow_shareslice r0, r3, r12, r4, r5, r6, r2, r14 
+    masked_shiftrow_shareslice r1, r3, r12, r4, r5, r6, r2, r14 
     add r0, r0, #32
     add r1, r1, #32
-    masked_shiftrow_8_shareslice r0, r3, r12, r4, r5, r6, r2, r14 
-    masked_shiftrow_8_shareslice r1, r3, r12, r4, r5, r6, r2, r14 
+    masked_shiftrow_shareslice r0, r3, r12, r4, r5, r6, r2, r14 
+    masked_shiftrow_shareslice r1, r3, r12, r4, r5, r6, r2, r14 
     
     pop {r4, r5, r6, pc}
-.size masked_shiftrows_8_shareslice,.-masked_shiftrows_8_shareslice
+.size masked_shiftrows_shareslice,.-masked_shiftrows_shareslice

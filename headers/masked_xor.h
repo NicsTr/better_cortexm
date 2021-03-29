@@ -2,6 +2,7 @@
 #define MASKED_XOR_H
 #include <stdint.h>
 
-void masked_xor_8(uint16_t a[8], uint16_t b[8], uint16_t res[8]);
+
+void masked_xor(uint16_t a[D + 1], uint16_t b[D + 1], uint16_t res[D + 1]);
 
 #endif /* MASKED_AND_H */

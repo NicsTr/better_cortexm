@@ -24,19 +24,19 @@
 .macro mixcolumn off
     .set addr, 0   + \off
     ldrh r1, [r0, #addr]
-    .set addr, 16  + \off
+    .set addr, 8  + \off
     ldrh r2, [r0, #addr]
-    .set addr, 32  + \off
+    .set addr, 16  + \off
     ldrh r3, [r0, #addr]
-    .set addr, 48  + \off
+    .set addr, 24  + \off
     ldrh r4, [r0, #addr]
-    .set addr, 64  + \off
+    .set addr, 32  + \off
     ldrh r5, [r0, #addr]
-    .set addr, 80  + \off
+    .set addr, 40  + \off
     ldrh r6, [r0, #addr]
-    .set addr, 96  + \off
+    .set addr, 48  + \off
     ldrh r7, [r0, #addr]
-    .set addr, 112 + \off
+    .set addr, 56 + \off
     ldrh r8, [r0, #addr]
 
     ror4_xor  r9, r1, r1
@@ -92,19 +92,19 @@
 
     .set addr, 0   + \off
     strh r1, [r0, #addr]
-    .set addr, 16  + \off
+    .set addr, 8  + \off
     strh r2, [r0, #addr]
-    .set addr, 32  + \off
+    .set addr, 16  + \off
     strh r3, [r0, #addr]
-    .set addr, 48  + \off
+    .set addr, 24  + \off
     strh r4, [r0, #addr]
-    .set addr, 64  + \off
+    .set addr, 32  + \off
     strh r5, [r0, #addr]
-    .set addr, 80  + \off
+    .set addr, 40  + \off
     strh r6, [r0, #addr]
-    .set addr, 96  + \off
+    .set addr, 48  + \off
     strh r7, [r0, #addr]
-    .set addr, 112 + \off
+    .set addr, 56 + \off
     strh r8, [r0, #addr]
 .endm
 

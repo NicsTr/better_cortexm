@@ -114,9 +114,9 @@
 
 // Require:
 //  - r0 address of uint16_t state[8][8]
-.globl masked_mixcolumns_8
-.type masked_mixcolumns_8,%function
-masked_mixcolumns_8:
+.globl masked_mixcolumns
+.type masked_mixcolumns,%function
+masked_mixcolumns:
     push {r4-r10, lr}
     
     movw r10, #0xFFFF
@@ -131,11 +131,11 @@ masked_mixcolumns_8:
     mixcolumn 14
 
     pop {r4-r10, pc}
-.size masked_mixcolumns_8,.-masked_mixcolumns_8
+.size masked_mixcolumns,.-masked_mixcolumns
 
 
 
-.globl masked_mixcolumns_8_shareslice
-.type masked_mixcolumns_8_shareslice,%function
-masked_mixcolumns_8_shareslice:
-.size masked_mixcolumns_8_shareslice,.-masked_mixcolumns_8_shareslice
+.globl masked_mixcolumns_shareslice
+.type masked_mixcolumns_shareslice,%function
+masked_mixcolumns_shareslice:
+.size masked_mixcolumns_shareslice,.-masked_mixcolumns_shareslice
