@@ -14,6 +14,8 @@
 //  - r12 mask0
 //  - r14 mask1
 //  - r9 tmp register for swapmove
+//
+// Apply shiftrow on two bitslice registers at a time
 .macro masked_shiftrow_8 off
     .set addr0, \off
     .set addr1, \off + 16

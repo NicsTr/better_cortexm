@@ -2,13 +2,8 @@
 .thumb
 
 
-.macro swpmv out0, out1, in0, in1, m, n, tmp
-    eor     \tmp, \in1, \in0, LSR \n
-    and     \tmp, \m
-    eor     \out1, \in1, \tmp
-    eor     \out0, \in0, \tmp, LSL \n
-.endm
-
+// Given in that contains 16 "useful" bits as 4 groups of 4 bits, gather them
+// and store them
 .macro gather_and_store in, m, dst, off, tmp0, tmp1
     and   \tmp0, \m, \in
     and   \tmp1, \m, \in, LSR #8
@@ -21,6 +16,8 @@
     strh  \tmp0, [\dst, \off]
 .endm
 
+// Given the 4 32-bits in[i], select bit off of each byte
+// At the end, out contains the 16 bits as 4 groups of 4 bits
 .macro partial_pack out, in0, in1, in2, in3, m, off, tmp
     and  \out, \m,   \in3, LSR \off
 

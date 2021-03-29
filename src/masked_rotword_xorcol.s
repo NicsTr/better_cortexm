@@ -1,12 +1,15 @@
 .syntax unified
 .thumb
 
+// Rotate a share accordingly
 .macro rotshare src, mask
     and  \src, \mask, \src, ROR #1
     orr  \src,  \src, \src, LSR #16
     uxth \src,  \src
 .endm
 
+// r1 contain addres of the bitsliced and masked state
+// The correct rotation is applied to all shares of a single bitslice register 
 .macro rotbit off, mask
     .set addr, 0   + \off
     ldrh r2, [r1, #addr]
@@ -52,6 +55,9 @@
     strh r9, [r1, #addr]
 .endm
 
+// Xor the correct column from the previous rkey  with result of previous
+// computation
+// This macro is for only one share of only one bitslice register
 .macro xorcols_share dst, prev, tmp0, tmp1, mask
     // First column: data already in dst, no shift needed
     and \tmp0, \prev, \mask            // Select column 0 of previous rkey

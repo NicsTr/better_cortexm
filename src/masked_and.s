@@ -92,12 +92,12 @@
     orr  r6, r10, r6,  LSL #16 // combine a6
     orr  r7, r11, r7,  LSL #16 // combine a7
 
-    orr  r8, r12, r8, LSL #16 // combine b6 
+    orr  r8, r12, r8, LSL #16 // combine b6
     orr  r9, r14, r9, LSL #16 // combine b7
 
     //stmdb      sp, {r4, r5, r6, r7, r8, r9} // /!\ not in the right order
 
-    // Store values computed before bewteen sp-4 and sp-24 
+    // Store values computed before bewteen sp-4 and sp-24
     str  r4, [sp, #148]
     str  r5, [sp, #144]
     str  r6, [sp, #140]
@@ -229,10 +229,10 @@
 
 // Require:
 //  - One tmp register
-// 
+//
 // Result:
 //  - Stack:
-// sp -  28: 0 
+// sp -  28: 0
 // ...
 // sp - 104: 0
 // TODO: More generic zeroing out memory
@@ -269,7 +269,7 @@
 //
 // src and tmp registers will be trashed
 .macro split_and_store dst0, dst1, src, tmp, mask, off
-    lsr  \tmp, \src, #16        // First half (res0) 
+    lsr  \tmp, \src, #16        // First half (res0)
     strh \tmp, [\dst0, \off]
     and  \src, \src, \mask      // Other half (res1)
     strh \src, [\dst1, \off]
@@ -318,26 +318,26 @@
 // Require this layout at the start:
 
 // Registers:
-// r0:  X
-// r1:  X
-// r2:  X
-// r3:  X
-// r4:  a0
-// r5:  a1
-// r6:  a2
-// r7:  a3
-// r8:  b0
-// r9:  b1
-// r10: b2
-// r11: b3
-// r12: b4
-// r14: b5
+// r0:  address of masked operand 0
+// r1:  address of masked operand 1
+// r2:  address of masked operand 2
+// r3:  address of masked operand 3
+// r4:  X
+// r5:  X
+// r6:  X
+// r7:  X
+// r8:  X
+// r9:  X
+// r10: X
+// r11: X
+// r12: X
+// r14: X
 
-// Stack:
+// Stack during the function:
 // sp + 196: fresh_randoms array addr
 // sp + 192: res1 array addr
 // sp + 188: res0 array addr
-// sp + 186: start of saved registers
+// sp + 184: start of saved registers
 // ...
 // sp + 152: end of saved registers
 // sp + 148: a4
@@ -352,20 +352,20 @@
 // sp +  44: tmp11
 // sp      : tmp0
 
-// 64 bytes of usable stack between sp and sp-63
-
 // Result:
 // - Store result at sp + 92 -> sp + 123
 
 // prologue: 1 block, 11 stores
 // zero_random: 1 block, 20 stores
 // load_operands_masked_and_8: 4 blocks, 38 loads
-// Body: 57 loads, 30 stores 
+// Body: 57 loads, 30 stores
 // store_results_masked_8: 1 block of 6 loads, 16 stores
 // epilogue: 1 block, 11 loads
 
 // Total macro: 77 stores, 112 loads (but a lot are pipelined and take only
 // one cycle)
+
+// TODO: HARDWARE LEAK during execution of a single instruction
 
 .globl masked_and_8
 .type masked_and_8,%function
@@ -496,7 +496,7 @@ masked_and_8:
     eor  r3,  r3,  r5    //Exec y42 = y41 ^ s45 into r3
     and  r5,  r8,  r1    //Exec s46 = a4 & b6 into r5
     and  r8,  r8,  r7    //Exec s47 = a4 & b7 into r8
-    ldr r12, [sp, #144  ] //Load a5 into r12
+    ldr r12, [sp, #144  ] //Load a5 into r12 // TODO: THIS LEAKS... MUST CLEAR
     and  r9, r12,  r6    //Exec s50 = a5 & b0 into r9
     str  r9, [sp, #148  ] //Store r9/s50 on stack
     ldr  r9, [sp, #24] //Load b1 into r9
@@ -627,7 +627,8 @@ masked_and_8:
     eor  r0,  r0,  r1    //Exec y7a = y79 ^ rand08 into r0
     eor  r0,  r0, r10    //Exec y7b = y7a ^ s73 into r0
     eor  r0,  r0, r11    //Exec T7  = y7b ^ rand23 into r0
-    
+
     store_results_masked_8
+    add sp, #152
     epilogue
 .size masked_and_8,.-masked_and_8

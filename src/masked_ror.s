@@ -48,7 +48,8 @@ masked_ror4_8:
 // Require:
 // - r0 input sharing
 // - r1 output sharing
-// - r3
+// Result:
+// ROR 8 for each share (a share is 16 bits)
 .globl masked_ror8_8
 .type masked_ror8_8,%function
 masked_ror8_8:
