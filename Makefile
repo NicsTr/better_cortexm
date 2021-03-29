@@ -8,20 +8,21 @@ BUILD_TEST_PATH = $(TEST_PATH)/build
 HEADERS_TEST_PATH = $(TEST_PATH)/headers
 SRC_TEST_PATH = $(TEST_PATH)/src
 
-ASSEMBLY_OBJS  = $(BUILD_PATH)/masked_and_s.o
-ASSEMBLY_OBJS += $(BUILD_PATH)/masked_xor_s.o
-ASSEMBLY_OBJS += $(BUILD_PATH)/masked_shiftrows_s.o
-ASSEMBLY_OBJS += $(BUILD_PATH)/masked_ror_s.o
-ASSEMBLY_OBJS += $(BUILD_PATH)/bitslicing_s.o
-ASSEMBLY_OBJS += $(BUILD_PATH)/masked_mixcolumns_s.o
-ASSEMBLY_OBJS += $(BUILD_PATH)/masked_rotword_xorcol_s.o
+ASSEMBLY_OBJS  = $(BUILD_PATH)/masked_and.o
+ASSEMBLY_OBJS += $(BUILD_PATH)/masked_and_4.o
+ASSEMBLY_OBJS += $(BUILD_PATH)/masked_xor.o
+ASSEMBLY_OBJS += $(BUILD_PATH)/masked_shiftrows.o
+ASSEMBLY_OBJS += $(BUILD_PATH)/masked_ror.o
+ASSEMBLY_OBJS += $(BUILD_PATH)/bitslicing.o
+ASSEMBLY_OBJS += $(BUILD_PATH)/masked_mixcolumns.o
+ASSEMBLY_OBJS += $(BUILD_PATH)/masked_rotword_xorcol.o
 
-C_OBJS  = $(BUILD_PATH)/xoshiro_c.o
-C_OBJS += $(BUILD_PATH)/masked_aes_sbox_c.o
-C_OBJS += $(BUILD_PATH)/masked_aes_keyschedule_c.o
-C_OBJS += $(BUILD_PATH)/masking_c.o
-C_OBJS += $(BUILD_PATH)/masked_utils_c.o
-C_OBJS += $(BUILD_PATH)/masked_aes_c.o
+C_OBJS  = $(BUILD_PATH)/xoshiro.o
+C_OBJS += $(BUILD_PATH)/masked_aes_sbox.o
+C_OBJS += $(BUILD_PATH)/masked_aes_keyschedule.o
+C_OBJS += $(BUILD_PATH)/masking.o
+C_OBJS += $(BUILD_PATH)/masked_utils.o
+C_OBJS += $(BUILD_PATH)/masked_aes.o
 
 C_OBJS_TEST  = $(BUILD_TEST_PATH)/startup.o
 C_OBJS_TEST += $(BUILD_TEST_PATH)/test_and.o
@@ -37,7 +38,7 @@ C_OBJS_TEST += $(BUILD_TEST_PATH)/test_masked_aes.o
 C_OBJS_TEST += $(BUILD_TEST_PATH)/main.o
 
 ARCH_FLAGS = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
-CFLAGS = -Wall -Werror -s -funroll-loops $(ARCH_FLAGS) -O3 -I$(HEADERS_PATH)
+CFLAGS = -Wall -Werror -s $(ARCH_FLAGS) -O3 -I$(HEADERS_PATH) -Wl,--gc-sections
 CFLAGS_TEST = -g $(ARCH_FLAGS) -I$(HEADERS_TEST_PATH) -I$(HEADERS_PATH) -lnosys
 
 LSCRIPT = $(TEST_PATH)/lscript.ld
@@ -46,10 +47,10 @@ LFLAGS_TEST = -static -nostartfiles -T$(LSCRIPT) -L$(LIB_PATH) -lmasked_aes
 
 # LIBRARY
 
-$(BUILD_PATH)/%_s.o: $(SRC_PATH)/%.s $(HEADERS_PATH)/%.h
+$(BUILD_PATH)/%.o: $(SRC_PATH)/%.s $(HEADERS_PATH)/%.h
 	arm-none-eabi-as $(ARCH_FLAGS) $< -o $@ 
 
-$(BUILD_PATH)/%_c.o: $(SRC_PATH)/%.c $(HEADERS_PATH)/%.h
+$(BUILD_PATH)/%.o: $(SRC_PATH)/%.c $(HEADERS_PATH)/%.h
 	arm-none-eabi-gcc $(CFLAGS) -c $< -o $@
 
 $(LIB_PATH)/libmasked_aes.a: $(ASSEMBLY_OBJS) $(C_OBJS)
