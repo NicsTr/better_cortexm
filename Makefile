@@ -28,6 +28,7 @@ ASSEMBLY_OBJS += $(BUILD_PATH)/masked_shiftrows_$D.o
 ASSEMBLY_OBJS += $(BUILD_PATH)/bitslicing_$D.o
 ASSEMBLY_OBJS += $(BUILD_PATH)/masked_mixcolumns_$D.o
 ASSEMBLY_OBJS += $(BUILD_PATH)/masked_rotword_xorcol_$D.o
+ASSEMBLY_OBJS += $(BUILD_PATH)/masked_sbox_lin_$D.o
 
 C_OBJS  = $(BUILD_PATH)/xoshiro_$D.o
 C_OBJS += $(BUILD_PATH)/masked_aes_sbox_$D.o
