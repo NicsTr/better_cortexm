@@ -48,7 +48,6 @@
     swapmove r3, r14, #1, r9
     swapmove r4, r14, #1, r9
 
-
     .set addr0, \off
     .set addr1, \off + 8
     strh r1, [r0, #addr0]

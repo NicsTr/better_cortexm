@@ -216,7 +216,6 @@ masked_and:
     //str  r14, [sp, #-12 ] //Store r3/T0 on stack
     and  r3,  r6,  r9    //Exec s21 = a2 & b1 into r3
     eor  r1,  r1,  r3    //Exec y13 = y12 ^ s21 into r1
-    eor  r3,  r3,  r3 // AVOID LOAD LEAKAGE
     ldr  r3, [sp, #0  ] //Load rand02 into r3
     eor  r1,  r1,  r3    //Exec y14 = y13 ^ rand02 into r1
     eor  r1,  r1,  r5    //Exec y15 = y14 ^ s13 into r1
@@ -231,7 +230,6 @@ masked_and:
     //str  r12, [sp, #0  ] //Store r1/T1 on stack
     and  r1,  r7, r10    //Exec s32 = a3 & b2 into r1
     eor  r1,  r3,  r1    //Exec y23 = y22 ^ s32 into r1
-    eor  r3,  r3,  r3 // AVOID LOAD LEAKAGE
     ldr  r3, [sp,  #4  ] //Load rand03 into r3
     eor  r1,  r1,  r3    //Exec y24 = y23 ^ rand03 into r1
     eor  r10,  r1,  r2    //Exec T2  = y24 ^ rand10 into r1
