@@ -4,17 +4,19 @@
 
 int test_bitslicing(void (*rng_fill)(char *, int))
 {
-    int nb_err = 0;
-    uint32_t state0[4];
-    uint32_t state1[4];
     uint16_t bs_state[8];
-    rng_fill((uint8_t *)state0, 16);
-    bitslice(state0[0], state0[1], state0[2], state0[3], bs_state);
-    unbitslice(bs_state, state1);
+    uint8_t state[16];
+    uint32_t *state32 = (uint32_t *)state;
+    uint8_t result[16];
+    uint32_t *result32 = (uint32_t *)result;
 
-    for (int i = 0; i < 4; i++) {
-        if (state0[i] != state1[i]) nb_err++;
+    rng_fill((char *)state, 16);
+
+    bitslice(state32[0], state32[1], state32[2], state32[3], bs_state);
+    unbitslice(bs_state, result32);
+
+    for (int i = 0; i < 16; i++) {
+        if (result[i] != state[i]) return 1;
     }
-    
-    return nb_err;
+    return 0;
 }

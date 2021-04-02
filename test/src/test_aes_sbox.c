@@ -38,25 +38,24 @@ int test_aes_sbox(void (*rng_fill)(char *, int))
     initialize_aes_sbox(array_sbox);
 
     uint16_t bs_sbox[8];
-    uint16_t bs_masked_sbox[8][8];
+    uint16_t bs_masked_sbox[8][D + 1];
     uint32_t v[4];
-    uint32_t fresh_randoms[320];
 
     rng_fill((char *)v, 16);
     bitslice(v[0], v[1], v[2], v[3], bs_sbox);
 
 
     for (int i = 0; i < 8; i++) {
-        mask_8(bs_sbox[i], bs_masked_sbox[i], rng_fill);
+        mask(bs_sbox[i], bs_masked_sbox[i], rng_fill);
     }
 
-    masked_aes_sbox_8(bs_masked_sbox, rng_fill);
+    masked_aes_sbox(bs_masked_sbox, rng_fill);
 
     uint32_t final_v[4];
     uint16_t final_bs[8];
     uint16_t tmp;
     for (int i = 0; i < 8; i++) {
-        final_bs[i] = unmask_8(bs_masked_sbox[i]);
+        final_bs[i] = unmask(bs_masked_sbox[i]);
     }
     unbitslice(final_bs, final_v);
 

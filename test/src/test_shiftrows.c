@@ -21,20 +21,20 @@ void shiftrows(uint16_t state[8])
 int test_shiftrows(void (*rng_fill)(char *, int))
 {
     uint16_t bs_state[8];
-    uint16_t bs_masked_state[8][8];
+    uint16_t bs_masked_state[8][D + 1];
     int nb_err = 0;
 
     rng_fill((char *) bs_state, 8*2);
 
     for (int i = 0; i < 8; i++) {
-        mask_8(bs_state[i], bs_masked_state[i], rng_fill);
+        mask(bs_state[i], bs_masked_state[i], rng_fill);
     }
 
-    masked_shiftrows_8(bs_masked_state);
+    masked_shiftrows(bs_masked_state);
     shiftrows(bs_state);
 
     for (int i = 0; i < 8; i++) {
-        if (unmask_8(bs_masked_state[i]) != bs_state[i]) nb_err++;
+        if (unmask(bs_masked_state[i]) != bs_state[i]) nb_err++;
     }
 
     return nb_err;

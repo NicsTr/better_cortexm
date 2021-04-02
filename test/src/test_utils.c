@@ -7,9 +7,9 @@ int test_utils(void (*rng_fill)(char *, int))
     uint8_t state[16];
     uint8_t state1[16];
     int nb_err = 0;
-    rng_fill(state, 16);
+    rng_fill((char *)state, 16);
 
-    uint16_t masked_bs_state[8][8];
+    uint16_t masked_bs_state[8][D + 1];
     mask_bitslice_state(state, masked_bs_state, rng_fill);
     unbitslice_unmask_state(masked_bs_state, state1);
 

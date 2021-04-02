@@ -101,21 +101,21 @@ int test_mixcolumns(void (*rng_fill)(char *, int))
 {
     uint16_t bs_state[8];
     uint32_t state[4];
-    uint16_t bs_masked_state[8][8];
+    uint16_t bs_masked_state[8][D + 1];
     int nb_err = 0;
 
     rng_fill((char *) state, 8*2);
     bitslice(state[0], state[1], state[2], state[3], bs_state);
 
     for (int i = 0; i < 8; i++) {
-        mask_8(bs_state[i], bs_masked_state[i], rng_fill);
+        mask(bs_state[i], bs_masked_state[i], rng_fill);
     }
 
-    masked_mixcolumns_8(bs_masked_state);
+    masked_mixcolumns(bs_masked_state);
     mixcolumns(bs_state);
 
     for (int i = 0; i < 8; i++) {
-        if (unmask_8(bs_masked_state[i]) != bs_state[i]) nb_err++;
+        if (unmask(bs_masked_state[i]) != bs_state[i]) nb_err++;
     }
 
     unbitslice(bs_state, state);
@@ -127,7 +127,7 @@ int test_vectors_mixcolumns(void (*rng_fill)(char *, int))
 {
     uint16_t bs_state[8];
     uint32_t state[4];
-    uint16_t bs_masked_state[8][8];
+    uint16_t bs_masked_state[8][D + 1];
     int nb_err = 0;
 
     state[0] = 0x455313db;
@@ -138,13 +138,13 @@ int test_vectors_mixcolumns(void (*rng_fill)(char *, int))
     bitslice(state[0], state[1], state[2], state[3], bs_state);
 
     for (int i = 0; i < 8; i++) {
-        mask_8(bs_state[i], bs_masked_state[i], rng_fill);
+        mask(bs_state[i], bs_masked_state[i], rng_fill);
     }
 
-    masked_mixcolumns_8(bs_masked_state);
+    masked_mixcolumns(bs_masked_state);
 
     for (int i = 0; i < 8; i++) {
-        bs_state[i] = unmask_8(bs_masked_state[i]);
+        bs_state[i] = unmask(bs_masked_state[i]);
     }
 
     unbitslice(bs_state, state);
